@@ -44,7 +44,6 @@ def Request_emoji_list(emoji_text):
     session = HTMLSession()
     url = "https://emojipedia.org/search/?q=" + emoji_text
     response = session.get(url)
-    response.html.render()#渲染
 
 
     soup = BeautifulSoup(response.html.html, 'lxml')
@@ -68,7 +67,6 @@ def Request_emoji(emoji_text):
     session = HTMLSession()
     url = "https://emojipedia.org" + emoji_text
     response = session.get(url)
-    response.html.render()#渲染
 
     emoji, status = __get_mid_text(response.html.html,"value=\"","\" readonly")
     if(status == -1):
@@ -89,9 +87,20 @@ def webhook(request):
 
     # type your token
     bot = telegram.Bot("")
+    wel_str ="""welcome to emoji wiki!
+
+All resources are from
+	https://emojipedia.org/
+
+Usage:
+[name]  : search emoji about [name]
+/[name] : output an emoji named [name]
+
+"""
+
 
     if(message == "/start"):
-        bot.send_message(chat_id = chat_id, text = "welcome to emoji wiki!\n\nUsage:\n[name] : search emoji\n /name : output a specific emoji")
+        bot.send_message(chat_id = chat_id, text = wel_str)
     elif(message[0] == '/'):
         Push_emoji_List(chat_id, Request_emoji(message))
     else:
