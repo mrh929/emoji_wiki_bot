@@ -41,7 +41,6 @@ def Request_emoji(emoji_text):
     session = HTMLSession()
     url = "https://emojipedia.org" + emoji_text
     response = session.get(url)
-    #response.html.render()#渲染
 
     emoji, status = __get_mid_text(response.html.html,"value=\"","\" readonly")
     if(status == -1):
@@ -50,14 +49,11 @@ def Request_emoji(emoji_text):
 
 
 def Push_emoji_List(chat_id, post_list):
-    #post_list = Request_emoji_list("zombie")
     for each in post_list:
         bot.send_message(chat_id = chat_id, text = each)
 
 def webhook(request):
     rdict = request.get_json()
-    if(rdict == {}):
-        return
 
     try:
         chat_id = rdict['message']['from']['id']
@@ -79,11 +75,14 @@ Usage:
 
 """
 
-
-    if(message == "/start"):
-        bot.send_message(chat_id = chat_id, text = wel_str)
-    elif(message[0] == '/'):
-        Push_emoji_List(chat_id, Request_emoji(message))
-    else:
-        Push_emoji_List(chat_id, Request_emoji_list(message))
-    return
+    try:
+        if(message == "/start"):
+            bot.send_message(chat_id = chat_id, text = wel_str)
+        elif(message[0] == '/'):
+            Push_emoji_List(chat_id, Request_emoji(message))
+        else:
+            Push_emoji_List(chat_id, Request_emoji_list(message))
+        return
+    except:
+        bot.send_message(chat_id = chat_id, text = "An error occurred!")
+        return
